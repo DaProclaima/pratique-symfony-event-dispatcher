@@ -64,29 +64,6 @@ class OrderController
         // voir src/Database.php
         $this->database->insertOrder($order);
 
-        // Après enregistrement, on veut envoyer un email au client :
-        // voir src/Mailer/Email.php et src/Mailer/Mailer.php
-        $email = new Email();
-        $email->setSubject("Commande confirmée")
-            ->setBody("Merci pour votre commande de {$order->getQuantity()} {$order->getProduct()} !")
-            ->setFrom("web@maboutique.com")
-            ->setTo($order->getEmail());
-
-        $this->mailer->send($email);
-
-        // Après email au client, on veut logger ce qui se passe :
-        // voir src/Logger.php
-        $this->logger->log("Email de confirmation envoyé à {$order->getEmail()} !");
-
-        // Après enregistrement on veut aussi envoyer un SMS au client
-        // voir src/Texter/Sms.php et /src/Texter/SmsTexter.php
-        $sms = new Sms();
-        $sms->setNumber($order->getPhoneNumber())
-            ->setText("Merci pour votre commande de {$order->getQuantity()} {$order->getProduct()} !");
-        $this->texter->send($sms);
-
-        // Après SMS au client, on veut logger ce qui se passe :
-        // voir src/Logger.php
-        $this->logger->log("SMS de confirmation envoyé à {$order->getPhoneNumber()} !");
+        $this->dispatcher->dispatch(new OrderEvent($order), 'order_after_insert');
     }
 }
