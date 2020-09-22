@@ -6,6 +6,6 @@ class SmsTexter
 {
     public function send(Sms $sms)
     {
-        var_dump("-------------", "DEBUT DE SMS TEXTER FICTIF : ", $sms, "FIN DE SMS TEXTER FICTIF");
+        dump("-------------", "DEBUT DE SMS TEXTER FICTIF : ", $sms, "FIN DE SMS TEXTER FICTIF");
     }
 }

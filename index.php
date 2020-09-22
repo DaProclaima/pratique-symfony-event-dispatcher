@@ -79,9 +79,9 @@ $orderEmailsListener = new OrderEmailsListener($mailer, $logger);
 $orderSmsListener = new OrderSmsListener($smsTexter, $logger);
 
 $dispatcher->addListener('order_before_insert', [$orderEmailsListener, 'sendToStock']);
-$dispatcher->addListener('order_after_insert', [$orderEmailsListener, 'sendToCustomer']);
-$dispatcher->addListener('order_after_insert', [$orderSmsListener, 'sendSmsToCustomer']);
-$dispatcher->addListener('order_after_insert', [$orderSmsListener, 'sendSmsToStock']);
+$dispatcher->addListener('order_after_insert', [$orderEmailsListener, 'sendToCustomer'],3);
+$dispatcher->addListener('order_after_insert', [$orderSmsListener, 'sendSmsToCustomer'], 1);
+$dispatcher->addListener('order_after_insert', [$orderSmsListener, 'sendSmsToStock'], 2);
 // Notre controller qui a besoin de tout ces services
 $controller = new OrderController($database, $mailer, $smsTexter, $logger, $dispatcher);
 

@@ -8,6 +8,6 @@ class Database
 {
     public function insertOrder(Order $order)
     {
-        var_dump("------------", "DEBUT D'INSERTION FICTIVE EN BDD : ", $order, "FIN D'INSERTION FICTIVE");
+        dump("------------", "DEBUT D'INSERTION FICTIVE EN BDD : ", $order, "FIN D'INSERTION FICTIVE");
     }
 }
