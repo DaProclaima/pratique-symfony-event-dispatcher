@@ -55,6 +55,7 @@
 
 use App\Controller\OrderController;
 use App\Database;
+use App\Listener\OrderEmailsListener;
 use App\Logger;
 use App\Mailer\Mailer;
 use App\Texter\SmsTexter;
@@ -73,15 +74,9 @@ $smsTexter = new SmsTexter(); // Un service fictif d'envoi de SMS (là aussi que
 $logger = new Logger(); // Un service de log (qui ne fait que du var_dump aussi)
 $dispatcher = new EventDispatcher();
 
-$dispatcher->addListener('order_before_insert', function() {
-    dump("j'ai bien vu l'évènement en question!");
-});
+$orderEmailsListener = new OrderEmailsListener($mailer, $logger);
 
-function definedFunction() {
-    dump("Defined function");
-}
-$dispatcher->addListener('order_before_insert', 'definedFunction');
-
+$dispatcher->addListener('order_before_insert', [$orderEmailsListener, 'sendToStock']);
 // Notre controller qui a besoin de tout ces services
 $controller = new OrderController($database, $mailer, $smsTexter, $logger, $dispatcher);
 
