@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Database;
+use App\Event\OrderEvent;
 use App\Logger;
 use App\Mailer\Email;
 use App\Mailer\Mailer;
@@ -57,7 +58,7 @@ class OrderController
 
 
 //        $this->dispatcher->dispatch(new GenericEvent(['order' => $order]), 'order_before_insert');
-        $this->dispatcher->dispatch(new GenericEvent($order), 'order_before_insert');
+        $this->dispatcher->dispatch(new OrderEvent($order), 'order_before_insert');
 
         // Enregistrement en base de données :
         // voir src/Database.php
