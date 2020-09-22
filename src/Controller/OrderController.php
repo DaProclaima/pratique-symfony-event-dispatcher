@@ -9,6 +9,7 @@ use App\Mailer\Mailer;
 use App\Model\Order;
 use App\Texter\Sms;
 use App\Texter\SmsTexter;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class OrderController
 {
@@ -17,13 +18,15 @@ class OrderController
     protected $mailer;
     protected $texter;
     protected $logger;
+    protected $dispatcher;
 
-    public function __construct(Database $database, Mailer $mailer, SmsTexter $texter, Logger $logger)
+    public function __construct(Database $database, Mailer $mailer, SmsTexter $texter, Logger $logger, EventDispatcher $dispatcher)
     {
         $this->database = $database;
         $this->mailer = $mailer;
         $this->texter = $texter;
         $this->logger = $logger;
+        $this->dispatcher = $dispatcher;
     }
 
     public function displayOrderForm()
@@ -57,6 +60,7 @@ class OrderController
             ->setBody("Merci de vérifier le stock pour le produit {$order->getProduct()} et la quantité {$order->getQuantity()} !")
             ->setTo("stock@maboutique.com")
             ->setFrom("web@maboutique.com");
+        $this->mailer->send($email);
 
         // Avant d'enregistrer, on veut logger ce qui se passe :
         // voir src/Logger.php

@@ -58,6 +58,7 @@ use App\Database;
 use App\Logger;
 use App\Mailer\Mailer;
 use App\Texter\SmsTexter;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 require __DIR__ . '/vendor/autoload.php';
 
@@ -71,8 +72,10 @@ $mailer = new Mailer(); // Un service fictif d'envoi d'emails (là aussi, que du
 $smsTexter = new SmsTexter(); // Un service fictif d'envoi de SMS (là aussi que du var_dump)
 $logger = new Logger(); // Un service de log (qui ne fait que du var_dump aussi)
 
+$dispatcher = new EventDispatcher();
+
 // Notre controller qui a besoin de tout ces services
-$controller = new OrderController($database, $mailer, $smsTexter, $logger);
+$controller = new OrderController($database, $mailer, $smsTexter, $logger, $dispatcher);
 
 // Si le formulaire a été soumis
 if (!empty($_POST)) {
