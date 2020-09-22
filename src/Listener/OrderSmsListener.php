@@ -40,4 +40,15 @@ class OrderSmsListener
         // voir src/Logger.php
         $this->logger->log("SMS de confirmation envoyé à {$order->getPhoneNumber()} !");
     }
+    public function sendSmsToStock(OrderEvent $event) {
+        $order = $event->getOrder();
+        // Après enregistrement on veut aussi envoyer un SMS au client
+        // voir src/Texter/Sms.php et /src/Texter/SmsTexter.php
+        $sms = new Sms();
+        $sms->setNumber('06060606060')
+            ->setText("Commande de {$order->getQuantity()} de {$order->getProduct()} pour {$order->getPhoneNumber()}!");
+        $this->texter->send($sms);
+
+        $this->logger->log("SMS de creation de commande envoyé à l'équipe du stock !");
+    }
 }
