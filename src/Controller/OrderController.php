@@ -10,6 +10,7 @@ use App\Model\Order;
 use App\Texter\Sms;
 use App\Texter\SmsTexter;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\GenericEvent;
 
 class OrderController
 {
@@ -66,6 +67,8 @@ class OrderController
         // voir src/Logger.php
         $this->logger->log("Commande en cours pour {$order->getQuantity()} {$order->getProduct()}");
 
+        $this->dispatcher->dispatch(new GenericEvent(['order' => $order]), 'order_before_insert');
+        
         // Enregistrement en base de données :
         // voir src/Database.php
         $this->database->insertOrder($order);

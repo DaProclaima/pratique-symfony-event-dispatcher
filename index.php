@@ -71,8 +71,16 @@ $database = new Database(); // Une connexion fictive à la base de données (en 
 $mailer = new Mailer(); // Un service fictif d'envoi d'emails (là aussi, que du var_dump)
 $smsTexter = new SmsTexter(); // Un service fictif d'envoi de SMS (là aussi que du var_dump)
 $logger = new Logger(); // Un service de log (qui ne fait que du var_dump aussi)
-
 $dispatcher = new EventDispatcher();
+
+$dispatcher->addListener('order_before_insert', function() {
+    dump("j'ai bien vu l'évènement en question!");
+});
+
+function definedFunction() {
+    dump("Defined function");
+}
+$dispatcher->addListener('order_before_insert', 'definedFunction');
 
 // Notre controller qui a besoin de tout ces services
 $controller = new OrderController($database, $mailer, $smsTexter, $logger, $dispatcher);
