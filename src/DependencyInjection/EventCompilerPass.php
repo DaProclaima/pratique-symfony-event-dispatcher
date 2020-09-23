@@ -14,14 +14,26 @@ class EventCompilerPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
 //        var_dump('Compilation works');
-        $subscriberIds =  $container->findTaggedServiceIds('app.my_event_subscriber');
+        $subscribersIds =  $container->findTaggedServiceIds('app.my_event_subscriber');
 //        var_dump($subscriberIds);
+        $listenersIds = $container->findTaggedServiceIds('app.my_event_listener');
+//        var_dump($listenersIds);
         $dispatcherDefinition = $container->findDefinition(EventDispatcher::class);
 //        var_dump($dispatcherDefinition);
-        foreach ($subscriberIds as $id => $tagData) {
+        foreach ($subscribersIds as $id => $tagData) {
             $dispatcherDefinition->addMethodCall('addSubscriber', [
                 new Reference($id)
             ]);
+        }
+        foreach ($listenersIds as $id => $tagData) {
+            foreach ($tagData as $data) {
+//                var_dump($data);
+            $dispatcherDefinition->addMethodCall('addListener', [
+                $data['event'],
+                [new Reference($id), $data['method']],
+                $data['priority']
+            ]);
+            }
         }
     }
 }

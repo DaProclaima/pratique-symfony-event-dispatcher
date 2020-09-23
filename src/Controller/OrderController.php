@@ -51,13 +51,13 @@ class OrderController
 
 
 
-//        $this->dispatcher->dispatch(new GenericEvent(['order' => $order]), 'order_before_insert');
-        $this->dispatcher->dispatch(new OrderEvent($order), 'order_before_insert');
+//        $this->dispatcher->dispatch(new GenericEvent(['order' => $order]), 'order.before_insert');
+        $this->dispatcher->dispatch(new OrderEvent($order), 'order.before_insert');
 
         // Enregistrement en base de données :
         // voir src/Database.php
         $this->database->insertOrder($order);
 
-        $this->dispatcher->dispatch(new OrderEvent($order), 'order_after_insert');
+        $this->dispatcher->dispatch(new OrderEvent($order), 'order.after_insert');
     }
 }
