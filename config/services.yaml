@@ -1,4 +1,8 @@
 services:
+  _instanceof:
+    Symfony\Component\EventDispatcher\EventSubscriberInterface:
+      tags: ['app.my_event_subscriber']
+
   _defaults:
     autowire: true
   App\:
@@ -22,9 +26,6 @@ services:
         priority: 2
       }
     ]
-
-  App\Listener\OrderEmailsSubscriber:
-    tags: ['app.my_event_subscriber']
 
   Symfony\Component\EventDispatcher\EventDispatcher:
     public:  true
