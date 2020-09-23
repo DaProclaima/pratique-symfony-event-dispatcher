@@ -8,8 +8,9 @@ use App\Event\OrderEvent;
 use App\Logger;
 use App\Mailer\Email;
 use App\Mailer\Mailer;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class OrderEmailsListener
+class OrderEmailsSubscriber implements EventSubscriberInterface
 {
     protected $mailer;
     protected $logger;
@@ -55,5 +56,18 @@ class OrderEmailsListener
         // voir src/Logger.php
         $this->logger->log("Email de confirmation envoyé à {$order->getEmail()} !");
         
+    }
+
+    public function test()
+    {
+        var_dump("proof of simplicity of using EventSubscriber");
+    }
+
+    public static function getSubscribedEvents()
+    {
+        return [
+          'order_before_insert' => [['sendToStock', 1], ['test', 0]],
+          'order_after_insert' => [['sendToCustomer', 5]]
+        ];
     }
 }
