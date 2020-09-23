@@ -3,34 +3,30 @@ services:
     autowire: true
   App\:
     resource: '../src/*'
-#    autowire: true
 
   App\Controller\OrderController:
     public: true
-#    autowire: true
 
-#  App\Listener\OrderSmsListener:
-#    public: true
-#    autowire: true
-#
-#  App\Listener\OrderEmailsSubscriber:
-#    public: true
-#    autowire: true
+  App\Listener\OrderSmsListener:
+    tags: ['app.my_event_listener']
+
+  App\Listener\OrderEmailsSubscriber:
+    tags: ['app.my_event_subscriber']
 
   Symfony\Component\EventDispatcher\EventDispatcher:
     public:  true
-    calls:
-      - method: 'addListener'
-        arguments:
-          - order_afer_insert
-          - ['@App\Listener\OrderSmsListener', "sendSmsToStock"]
-          - 3
-      - method: 'addListener'
-        arguments:
-          - order_after_insert
-          -  ['@App\Listener\OrderSmsListener', 'sendSmsToCustomer']
-          - 2
-      - method: 'addSubscriber'
-        arguments:
-          - '@App\Listener\OrderEmailsSubscriber'
+#    calls:
+#      - method: 'addListener'
+#        arguments:
+#          - order_afer_insert
+#          - ['@App\Listener\OrderSmsListener', "sendSmsToStock"]
+#          - 3
+#      - method: 'addListener'
+#        arguments:
+#          - order_after_insert
+#          -  ['@App\Listener\OrderSmsListener', 'sendSmsToCustomer']
+#          - 2
+#      - method: 'addSubscriber'
+#        arguments:
+#          - '@App\Listener\OrderEmailsSubscriber'
 
