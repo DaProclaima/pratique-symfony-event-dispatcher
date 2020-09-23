@@ -78,11 +78,10 @@ $dispatcher = new EventDispatcher();
 $orderEmailsSubscriber = new OrderEmailsSubscriber($mailer, $logger);
 $orderSmsListener = new OrderSmsListener($smsTexter, $logger);
 
-//$dispatcher->addListener('order_before_insert', [$orderEmailsSubscriber, 'sendToStock']);
 $dispatcher->addListener('order_after_insert', [$orderEmailsSubscriber, 'sendToCustomer'],3);
-//$dispatcher->addListener('order_after_insert', [$orderSmsListener, 'sendSmsToCustomer'], 1);
 $dispatcher->addListener('order_after_insert', [$orderSmsListener, 'sendSmsToStock'], 2);
 $dispatcher->addSubscriber($orderEmailsSubscriber);
+
 // Notre controller qui a besoin de tout ces services
 $controller = new OrderController($database, $mailer, $smsTexter, $logger, $dispatcher);
 

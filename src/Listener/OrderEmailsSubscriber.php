@@ -42,6 +42,9 @@ class OrderEmailsSubscriber implements EventSubscriberInterface
     public function sendToCustomer(OrderEvent $event)
     {
         $order = $event->getOrder();
+// stop order_after_insert event spreading, which means other listeners of this event will not catch it and neither start methods
+        $event->stopPropagation();
+
         // Après enregistrement, on veut envoyer un email au client :
         // voir src/Mailer/Email.php et src/Mailer/Mailer.php
         $email = new Email();
@@ -66,7 +69,7 @@ class OrderEmailsSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-          'order_before_insert' => [['sendToStock', 1], ['test', 0]],
+          'order_before_insert' => [['sendToStock', 0], ['test', 3]],
           'order_after_insert' => [['sendToCustomer', 5]]
         ];
     }
