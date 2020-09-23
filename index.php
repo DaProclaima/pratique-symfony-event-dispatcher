@@ -83,7 +83,7 @@ $dispatcher->addListener('order_after_insert', [$orderSmsListener, 'sendSmsToSto
 $dispatcher->addSubscriber($orderEmailsSubscriber);
 
 // Notre controller qui a besoin de tout ces services
-$controller = new OrderController($database, $mailer, $smsTexter, $logger, $dispatcher);
+$controller = new OrderController($database, $dispatcher);
 
 // Si le formulaire a été soumis
 if (!empty($_POST)) {
