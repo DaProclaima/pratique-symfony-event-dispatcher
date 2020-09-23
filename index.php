@@ -84,14 +84,14 @@ $container->compile();
 //$smsTexter = new SmsTexter(); // Un service fictif d'envoi de SMS (là aussi que du var_dump)
 //$logger = new Logger(); // Un service de log (qui ne fait que du var_dump aussi)
 //$dispatcher = new EventDispatcher();
-//
-$orderEmailsSubscriber = $container->get(OrderEmailsSubscriber::class);
-$orderSmsListener = $container->get(OrderSmsListener::class);
-$dispatcher = $container->get(EventDispatcher::class);
 
-$dispatcher->addListener('order_after_insert', [$orderEmailsSubscriber, 'sendToCustomer'],3);
-$dispatcher->addListener('order_after_insert', [$orderSmsListener, 'sendSmsToStock'], 2);
-$dispatcher->addSubscriber($orderEmailsSubscriber);
+//$orderEmailsSubscriber = $container->get(OrderEmailsSubscriber::class);
+//$orderSmsListener = $container->get(OrderSmsListener::class);
+//$dispatcher = $container->get(EventDispatcher::class);
+
+//$dispatcher->addListener('order_after_insert', [$orderSmsListener, 'sendSmsToStock'], 3);
+//$dispatcher->addListener('order_after_insert', [$orderEmailsSubscriber, 'sendToCustomer'],2);
+//$dispatcher->addSubscriber($orderEmailsSubscriber);
 
 // Notre controller qui a besoin de tout ces services
 $controller = $container->get(OrderController::class);
