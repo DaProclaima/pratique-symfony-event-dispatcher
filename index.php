@@ -60,30 +60,41 @@ use App\Listener\OrderSmsListener;
 use App\Logger;
 use App\Mailer\Mailer;
 use App\Texter\SmsTexter;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 require __DIR__ . '/vendor/autoload.php';
+
+$container = new ContainerBuilder();
+
+$loader =  new YamlFileLoader($container, new FileLocator(__DIR__ . '/config'));
+$loader->load('services.yaml');
+
+$container->compile();
 
 /**
  * INSTANCIATION DES OBJETS DE BASE :
  * -----------
  * Nous instancions les objets basiques nécessaires à l'application
  */
-$database = new Database(); // Une connexion fictive à la base de données (en vrai ça ne fait que des var_dump)
-$mailer = new Mailer(); // Un service fictif d'envoi d'emails (là aussi, que du var_dump)
-$smsTexter = new SmsTexter(); // Un service fictif d'envoi de SMS (là aussi que du var_dump)
-$logger = new Logger(); // Un service de log (qui ne fait que du var_dump aussi)
-$dispatcher = new EventDispatcher();
-
-$orderEmailsSubscriber = new OrderEmailsSubscriber($mailer, $logger);
-$orderSmsListener = new OrderSmsListener($smsTexter, $logger);
+//$database = new Database(); // Une connexion fictive à la base de données (en vrai ça ne fait que des var_dump)
+//$mailer = new Mailer(); // Un service fictif d'envoi d'emails (là aussi, que du var_dump)
+//$smsTexter = new SmsTexter(); // Un service fictif d'envoi de SMS (là aussi que du var_dump)
+//$logger = new Logger(); // Un service de log (qui ne fait que du var_dump aussi)
+//$dispatcher = new EventDispatcher();
+//
+$orderEmailsSubscriber = $container->get(OrderEmailsSubscriber::class);
+$orderSmsListener = $container->get(OrderSmsListener::class);
+$dispatcher = $container->get(EventDispatcher::class);
 
 $dispatcher->addListener('order_after_insert', [$orderEmailsSubscriber, 'sendToCustomer'],3);
 $dispatcher->addListener('order_after_insert', [$orderSmsListener, 'sendSmsToStock'], 2);
 $dispatcher->addSubscriber($orderEmailsSubscriber);
 
 // Notre controller qui a besoin de tout ces services
-$controller = new OrderController($database, $dispatcher);
+$controller = $container->get(OrderController::class);
 
 // Si le formulaire a été soumis
 if (!empty($_POST)) {
