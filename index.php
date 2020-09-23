@@ -53,28 +53,18 @@
  * composant symfony/event-dispatcher (composer require symfony/event-dispatcher) va nous aider dans notre recherche de la pureté de la POO :D
  */
 
-use App\Controller\OrderController;
 
-use App\DependencyInjection\EventCompilerPass;
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-
-require __DIR__ . '/vendor/autoload.php';
-
-$container = new ContainerBuilder();
-
-$loader =  new YamlFileLoader($container, new FileLocator(__DIR__ . '/config'));
-$loader->load('services.yaml');
-
-$container->addCompilerPass(new EventCompilerPass());
-$container->compile();
 
 /**
  * INSTANCIATION DES OBJETS DE BASE :
  * -----------
  * Nous instancions les objets basiques nécessaires à l'application
  */
+
+use App\Controller\OrderController;
+
+require __DIR__ . '/config/bootstrap.php';
+
 
 // Notre controller qui a besoin de tout ces services
 $controller = $container->get(OrderController::class);
